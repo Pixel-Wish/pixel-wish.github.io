@@ -21,6 +21,7 @@
       padding: 0;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
     
     body {
@@ -36,7 +37,7 @@
       background: #f5f7fa;
     }
     
-    /* Fondo premium con gradiente animado */
+    /* Fondo premium con gradiente animado - optimizado */
     .premium-bg {
       position: fixed;
       top: -10%;
@@ -54,7 +55,7 @@
         #ff9a9e 100%
       );
       background-size: 200% 200%;
-      animation: gradientFlow 15s ease infinite;
+      animation: gradientFlow 25s ease infinite; /* Animación más lenta para mejor rendimiento */
     }
     
     @keyframes gradientFlow {
@@ -63,7 +64,7 @@
       100% { background-position: 0% 50%; }
     }
     
-    /* Capa de blur premium */
+    /* Capa de blur premium con fallback */
     .premium-blur {
       position: fixed;
       top: 0;
@@ -71,18 +72,22 @@
       width: 100%;
       height: 100%;
       z-index: -1;
-      backdrop-filter: blur(12px) saturate(180%);
-      -webkit-backdrop-filter: blur(12px) saturate(180%);
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.85); /* Fallback para navegadores sin backdrop-filter */
+    }
+    
+    @supports (backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px)) {
+      .premium-blur {
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        background: rgba(255, 255, 255, 0.15);
+      }
     }
     
     .card-scene {
       width: 100%;
       max-width: 500px;
-      /* Altura flexible para móviles */
-      height: auto;
-      min-height: 80vh;
-      max-height: 90vh;
+      min-height: 85vh;
+      max-height: 95vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -94,13 +99,13 @@
     
     .card-container {
       width: 100%;
-      /* Altura flexible que se ajusta al contenido */
       height: auto;
       flex: 1;
       position: relative;
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
-      min-height: 300px; /* Altura mínima para evitar que sea demasiado pequeña */
+      min-height: 300px;
+      max-height: calc(100% - 60px); /* Límite máximo para dejar espacio al botón */
     }
     
     .card-container.flipped {
@@ -128,7 +133,7 @@
       align-items: center;
       padding: 20px;
       text-align: center;
-      background-color: rgba(255, 255, 255, 0.85);
+      background-color: rgba(255, 255, 255, 0.9);
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
     
@@ -140,7 +145,7 @@
     .card-back {
       transform: rotateY(180deg);
       color: var(--dark);
-      padding: 15px; /* Menos padding para móviles */
+      padding: 15px;
     }
     
     .logo {
@@ -163,12 +168,12 @@
       flex-direction: column;
       justify-content: space-evenly;
       width: 100%;
-      overflow: hidden; /* Previene desbordamiento */
+      overflow: hidden;
     }
     
     .features {
       margin: 10px 0;
-      flex-shrink: 0; /* Evita compresión en móviles */
+      flex-shrink: 0;
     }
     
     .feature {
@@ -183,6 +188,7 @@
       color: var(--primary);
       margin-right: 8px;
       font-size: 0.9rem;
+      min-width: 20px; /* Evita cambios de tamaño en diferentes navegadores */
     }
     
     .social-links {
@@ -190,21 +196,21 @@
       justify-content: center;
       gap: 15px;
       margin-top: 15px;
-      flex-shrink: 0; /* Mantiene posición fija */
+      flex-shrink: 0;
     }
     
     .social-link {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 38px;
-      height: 38px;
+      width: 42px; /* Tamaño aumentado para mejor tappability */
+      height: 42px;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
       border-radius: 50%;
       text-decoration: none;
       transition: all 0.3s ease;
-      font-size: 1rem;
+      font-size: 1.1rem;
       border: 2px solid white;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -215,23 +221,23 @@
     }
     
     .flip-button {
-      margin: 15px 0 10px; /* Más margen para separar del contenido */
-      padding: 10px 20px;
+      margin: 20px 0 10px;
+      padding: 12px 24px;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
       border: none;
       border-radius: 50px;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
       border: 2px solid white;
-      flex-shrink: 0; /* Evita que se comprima */
-      z-index: 10; /* Asegura visibilidad */
+      flex-shrink: 0;
+      z-index: 10;
     }
     
     .flip-button:hover, .flip-button:focus {
@@ -256,7 +262,7 @@
       }
       
       .card-scene {
-        min-height: 85vh;
+        min-height: 90vh;
         max-height: 95vh;
         padding: 5px;
         margin: 5px 0;
@@ -268,7 +274,6 @@
       
       .card-face {
         padding: 15px;
-        background-color: rgba(255, 255, 255, 0.9);
       }
       
       .card-back {
@@ -300,20 +305,29 @@
       }
       
       .social-link {
-        width: 35px;
-        height: 35px;
-        font-size: 0.9rem;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
       }
       
       .flip-button {
-        padding: 8px 16px;
-        font-size: 0.8rem;
-        margin: 10px 0 5px;
+        padding: 10px 20px;
+        font-size: 0.85rem;
+        margin: 15px 0 5px;
       }
     }
     
     /* Soporte para Safari iOS */
     @supports (-webkit-touch-callout: none) {
+      body {
+        min-height: -webkit-fill-available;
+      }
+      
+      .card-scene {
+        min-height: -webkit-fill-available;
+        max-height: none;
+      }
+      
       .premium-blur {
         background: rgba(255, 255, 255, 0.25);
       }
@@ -321,9 +335,12 @@
       .card-face {
         -webkit-backdrop-filter: blur(5px);
       }
-      
-      .card-scene {
-        min-height: -webkit-fill-available;
+    }
+    
+    /* Soporte para Firefox Mobile */
+    @-moz-document url-prefix() {
+      .card-face {
+        background-color: rgba(255, 255, 255, 0.95);
       }
     }
     
@@ -336,6 +353,51 @@
       .social-link:hover, .social-link:focus,
       .flip-button:hover, .flip-button:focus {
         transform: none;
+      }
+      
+      .card-container {
+        transition: none;
+      }
+    }
+    
+    /* Pantallas extremadamente pequeñas */
+    @media (max-width: 350px) and (max-height: 600px) {
+      .card-scene {
+        min-height: 95vh;
+        padding: 2px;
+      }
+      
+      .card-container {
+        min-height: 220px;
+      }
+      
+      .card-face {
+        padding: 10px;
+      }
+      
+      .logo {
+        font-size: 1.2rem;
+      }
+      
+      .card-title {
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+      }
+      
+      .feature {
+        font-size: 0.7rem;
+      }
+      
+      .flip-button {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+        margin: 10px 0;
+      }
+      
+      .social-link {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -408,7 +470,11 @@
         flipButton.classList.toggle('flipped');
       }
       
-      flipButton.addEventListener('click', toggleCard);
+      flipButton.addEventListener('click', function(e) {
+        e.stopPropagation(); // Previene que el evento se propague al contenedor
+        toggleCard();
+      });
+      
       cardContainer.addEventListener('click', toggleCard);
       
       // Ajuste dinámico para pantallas muy pequeñas
@@ -416,18 +482,37 @@
         const viewportHeight = window.innerHeight;
         const viewportWidth = window.innerWidth;
         const scene = document.querySelector('.card-scene');
+        const cardContainer = document.querySelector('.card-container');
         
         if (viewportHeight < 600 || viewportWidth < 350) {
-          scene.style.minHeight = '90vh';
-          scene.style.maxHeight = '95vh';
+          scene.style.minHeight = '95vh';
+          scene.style.maxHeight = '100vh';
+          cardContainer.style.minHeight = '250px';
         } else {
-          scene.style.minHeight = '80vh';
-          scene.style.maxHeight = '90vh';
+          scene.style.minHeight = '85vh';
+          scene.style.maxHeight = '95vh';
+          cardContainer.style.minHeight = '300px';
         }
       }
       
+      // Manejo de altura en iOS
+      function setFullHeight() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      }
+      
+      setFullHeight();
       adjustForSmallScreens();
-      window.addEventListener('resize', adjustForSmallScreens);
+      
+      window.addEventListener('resize', function() {
+        setFullHeight();
+        adjustForSmallScreens();
+      });
+      
+      // Prevenir zoom en inputs en iOS
+      document.addEventListener('gesturestart', function(e) {
+        e.preventDefault();
+      });
     });
   </script>
 </body>

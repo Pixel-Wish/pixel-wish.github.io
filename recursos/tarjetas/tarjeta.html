@@ -79,20 +79,28 @@
     .card-scene {
       width: 100%;
       max-width: 500px;
-      height: calc(100vh - 20px);
+      /* Altura flexible para móviles */
+      height: auto;
+      min-height: 80vh;
+      max-height: 90vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       perspective: 1000px;
+      padding: 10px;
+      margin: 10px 0;
     }
     
     .card-container {
       width: 100%;
-      height: calc(100% - 60px);
+      /* Altura flexible que se ajusta al contenido */
+      height: auto;
+      flex: 1;
       position: relative;
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+      min-height: 300px; /* Altura mínima para evitar que sea demasiado pequeña */
     }
     
     .card-container.flipped {
@@ -118,7 +126,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 5%;
+      padding: 20px;
       text-align: center;
       background-color: rgba(255, 255, 255, 0.85);
       border: 1px solid rgba(255, 255, 255, 0.3);
@@ -132,6 +140,7 @@
     .card-back {
       transform: rotateY(180deg);
       color: var(--dark);
+      padding: 15px; /* Menos padding para móviles */
     }
     
     .logo {
@@ -154,10 +163,12 @@
       flex-direction: column;
       justify-content: space-evenly;
       width: 100%;
+      overflow: hidden; /* Previene desbordamiento */
     }
     
     .features {
       margin: 10px 0;
+      flex-shrink: 0; /* Evita compresión en móviles */
     }
     
     .feature {
@@ -179,6 +190,7 @@
       justify-content: center;
       gap: 15px;
       margin-top: 15px;
+      flex-shrink: 0; /* Mantiene posición fija */
     }
     
     .social-link {
@@ -203,8 +215,8 @@
     }
     
     .flip-button {
-      margin-top: 10px;
-      padding: 8px 16px;
+      margin: 15px 0 10px; /* Más margen para separar del contenido */
+      padding: 10px 20px;
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       color: white;
       border: none;
@@ -218,6 +230,8 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
       border: 2px solid white;
+      flex-shrink: 0; /* Evita que se comprima */
+      z-index: 10; /* Asegura visibilidad */
     }
     
     .flip-button:hover, .flip-button:focus {
@@ -235,36 +249,54 @@
     }
     
     /* Optimización para móviles pequeños */
-    @media (max-width: 400px) {
+    @media (max-width: 480px) {
       .premium-blur {
         backdrop-filter: blur(8px) saturate(160%);
         -webkit-backdrop-filter: blur(8px) saturate(160%);
       }
       
+      .card-scene {
+        min-height: 85vh;
+        max-height: 95vh;
+        padding: 5px;
+        margin: 5px 0;
+      }
+      
+      .card-container {
+        min-height: 250px;
+      }
+      
       .card-face {
-        padding: 4%;
+        padding: 15px;
         background-color: rgba(255, 255, 255, 0.9);
+      }
+      
+      .card-back {
+        padding: 10px;
       }
       
       .logo {
         margin-bottom: 5px;
+        font-size: clamp(1.3rem, 6vw, 1.8rem);
       }
       
       .card-title {
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+        font-size: clamp(0.9rem, 4vw, 1.3rem);
       }
       
       .features {
-        margin: 5px 0;
+        margin: 8px 0;
       }
       
       .feature {
         margin-bottom: 5px;
+        font-size: clamp(0.75rem, 3.2vw, 0.85rem);
       }
       
       .social-links {
         gap: 12px;
-        margin-top: 10px;
+        margin-top: 12px;
       }
       
       .social-link {
@@ -274,8 +306,9 @@
       }
       
       .flip-button {
-        padding: 6px 12px;
+        padding: 8px 16px;
         font-size: 0.8rem;
+        margin: 10px 0 5px;
       }
     }
     
@@ -288,12 +321,21 @@
       .card-face {
         -webkit-backdrop-filter: blur(5px);
       }
+      
+      .card-scene {
+        min-height: -webkit-fill-available;
+      }
     }
     
     /* Optimización de rendimiento */
     @media (prefers-reduced-motion: reduce) {
       .premium-bg {
         animation: none;
+      }
+      
+      .social-link:hover, .social-link:focus,
+      .flip-button:hover, .flip-button:focus {
+        transform: none;
       }
     }
   </style>
@@ -376,8 +418,11 @@
         const scene = document.querySelector('.card-scene');
         
         if (viewportHeight < 600 || viewportWidth < 350) {
-          scene.style.height = 'calc(100vh - 10px)';
-          scene.style.padding = '5px';
+          scene.style.minHeight = '90vh';
+          scene.style.maxHeight = '95vh';
+        } else {
+          scene.style.minHeight = '80vh';
+          scene.style.maxHeight = '90vh';
         }
       }
       
